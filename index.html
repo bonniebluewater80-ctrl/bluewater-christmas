@@ -270,6 +270,44 @@ function openDoor(day) {
     : "This little surprise opens December " +
       (12 + day) + ". Come back then!";
 
+ 
+  const giftText = document.getElementById("giftText");
+
+  if (unlocked && day === 1) {
+    giftText.innerHTML = `
+      <img src="day-01.png"
+        alt="Piper and the bluebird welcome you"
+        style="width:100%; border-radius:10px;">
+
+      <div style="text-align:left; line-height:1.6;">
+
+        <p>This year, I wanted to do something a little special for the holidays. Something that didn't require a shopping list, wrapping paper, or another trip to the store.</p>
+
+        <p>So, I created a little Christmas village just for you.</p>
+
+        <p>Over the next 12 days, a new door will open, revealing a small surprise. Some will make you smile, others might make you reflect, and a few are little gifts you can keep.</p>
+
+        <p>My hope is that you'll find a few minutes in the busyness of the season to pause and enjoy yourself.</p>
+
+        <p>As Ferris Bueller once said:</p>
+
+        <p style="font-style:italic; text-align:center;">
+        “Life moves pretty fast. If you don't stop and look around once in a while, you could miss it.”
+        </p>
+
+        <p>Piper, the little bluebird, and I are glad you're here.</p>
+
+        <p>Merry Christmas,<br>
+        Bonnie Bluewater</p>
+
+      </div>
+    `;
+  }
+
+  document.getElementById("gift").style.maxHeight = "85dvh";
+  document.getElementById("gift").style.overflowY = "auto";
+
+
   document.getElementById("gift").showModal();
 }
 
