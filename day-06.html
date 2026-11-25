@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Letter to Next Christmas</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 12px;
+  background: #faf8f2;
+  color: #18354a;
+  font-family: Georgia, serif;
+  line-height: 1.6;
+}
+
+.stationery {
+  max-width: 650px;
+  margin: auto;
+  padding: 18px;
+  border: 1px solid #b5c7d2;
+  border-radius: 10px;
+  background: #fffdf7;
+}
+
+img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: normal;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.date {
+  text-align: center;
+  font-size: 14px;
+  color: #617785;
+}
+
+.prompts {
+  font-size: 14px;
+  padding: 12px;
+  background: #edf2f4;
+  border-radius: 6px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 260px;
+  padding: 14px;
+  font-family: Georgia, serif;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #18354a;
+  background: #fffdf7;
+  border: 1px solid #b5c7d2;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+button {
+  background: #18354a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 16px;
+  margin: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.actions {
+  text-align: center;
+}
+
+.footer {
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
+  margin-top: 24px;
+}
+
+#status {
+  text-align: center;
+  color: #356d62;
+  font-size: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<main class="stationery">
+
+<img src="day-06.png"
+alt="The Bluewater Christmas Post Office">
+
+<h1>A Letter to Next Christmas</h1>
+
+<p class="date">
+December 18, 2026
+</p>
+
+<p>
+Before another year slips by, take a moment
+to write to the person you'll be next Christmas.
+</p>
+
+<div class="prompts">
+<strong>Need a little inspiration?</strong>
+<p>
+What is something you never want to forget?
+</p>
+<p>
+What are you ready to leave behind?
+</p>
+<p>
+What do you hope will be different next Christmas?
+</p>
+</div>
+
+<p class="date">
+To be opened December 18, 2027
+</p>
+
+<label for="letter">
+<strong>Dear Future Me,</strong>
+</label>
+
+<textarea id="letter"
+placeholder="As I sit here writing to you, I hope..."></textarea>
+
+<div class="actions">
+
+<button id="seal" onclick="sealLetter()">
+Seal My Letter
+</button>
+
+<button id="save" onclick="saveLetter()" disabled>
+Save My Letter
+</button>
+
+</div>
+
+<p id="status" role="status"></p>
+
+<p class="footer">
+Some gifts take a whole year to open.
+</p>
+
+<p class="date">
+Your letter is private. Nothing is submitted
+to our website. Save your letter before leaving.
+</p>
+
+<p class="footer">Bluewater</p>
+
+</main>
+
+<script>
+
+const letter = document.getElementById("letter");
+const seal = document.getElementById("seal");
+const save = document.getElementById("save");
+const status = document.getElementById("status");
+
+function sealLetter() {
+
+  if (letter.readOnly) {
+    letter.readOnly = false;
+    seal.textContent = "Seal My Letter";
+    save.disabled = true;
+    status.textContent = "";
+    letter.focus();
+    return;
+  }
+
+  if (!letter.value.trim()) {
+    status.textContent =
+      "Write a little something before sealing your letter.";
+    letter.focus();
+    return;
+  }
+
+  letter.readOnly = true;
+  seal.textContent = "Unseal to Edit";
+  save.disabled = false;
+
+  status.textContent =
+    "Your letter is sealed. Save it for next Christmas.";
+}
+
+function saveLetter() {
+
+  const content =
+    "The Bluewater Christmas Post Office\n" +
+    "A Letter to Next Christmas\n\n" +
+    "To be opened December 18, 2027\n\n" +
+    "Dear Future Me,\n\n" +
+    letter.value +
+    "\n\nSome gifts take a whole year to open.\n" +
+    "Bluewater";
+
+  const file = new Blob([content], {
+    type: "text/plain;charset=utf-8"
+  });
+
+  const url = URL.createObjectURL(file);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "My-Letter-to-Christmas-2027.txt";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+
+  status.textContent =
+    "Check your downloads and keep your letter somewhere safe.";
+}
+
+</script>
+
+</body>
+</html>
