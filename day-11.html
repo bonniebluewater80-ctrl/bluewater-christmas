@@ -1,0 +1,635 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>The Bluewater Christmas Post Office</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 12px;
+  background: #faf8f2;
+  color: #18354a;
+  font-family: Georgia, serif;
+}
+
+main {
+  max-width: 680px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: normal;
+  text-align: center;
+  margin: 15px 0;
+}
+
+.intro {
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.star {
+  color: #b99a56;
+  text-align: center;
+  font-size: 24px;
+}
+
+.designs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 15px 0 24px;
+}
+
+.design {
+  padding: 5px;
+  border: 2px solid #ded7c8;
+  border-radius: 9px;
+  background: white;
+  color: #18354a;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  font-size: 13px;
+}
+
+.design.selected {
+  border-color: #b99a56;
+  background: #f1ead9;
+}
+
+.design img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 5px;
+  display: block;
+  margin-bottom: 7px;
+}
+
+label {
+  display: block;
+  font-size: 15px;
+  margin: 16px 0 7px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cfc6b5;
+  border-radius: 7px;
+  background: white;
+  color: #18354a;
+  font-family: Georgia, serif;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.counter {
+  text-align: right;
+  font-size: 12px;
+  color: #687b89;
+  margin-top: 5px;
+}
+
+.preview-title {
+  text-align: center;
+  font-weight: normal;
+  font-size: 20px;
+  margin-top: 28px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 3px 12px #00000015;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.action {
+  flex: 1;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #b99a56;
+  border-radius: 8px;
+  background: #18354a;
+  color: white;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.secondary {
+  background: #faf8f2;
+  color: #18354a;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+#status {
+  text-align: center;
+  min-height: 22px;
+  font-size: 14px;
+  color: #527f9e;
+}
+
+.privacy {
+  font-size: 12px;
+  text-align: center;
+  color: #687b89;
+  line-height: 1.6;
+}
+
+@media (max-width: 420px) {
+
+  body {
+    padding: 7px;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  .design {
+    font-size: 11px;
+  }
+
+  .designs {
+    gap: 5px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<main>
+
+<div class="star">✧</div>
+
+<h1>The Bluewater Christmas Post Office</h1>
+
+<p class="intro">
+A little Christmas joy is even better when shared.
+Create a postcard for someone special.
+</p>
+
+<label>1. Choose your postcard</label>
+
+<div class="designs">
+
+<button class="design selected"
+        data-image="day-11-01.png"
+        aria-pressed="true">
+
+  <img src="day-11-01.png"
+       alt="Christmas envelope and little tree">
+
+  Christmas Wishes
+
+</button>
+
+<button class="design"
+        data-image="day-11-02.png"
+        aria-pressed="false">
+
+  <img src="day-11-02.png"
+       alt="Snowy coastal lighthouse">
+
+  Coastal Christmas
+
+</button>
+
+<button class="design"
+        data-image="day-11-03.png"
+        aria-pressed="false">
+
+  <img src="day-11-03.png"
+       alt="Christmas cottage and red mailbox">
+
+  Christmas Cottage
+
+</button>
+
+</div>
+
+<label for="recipient">2. Who is it for?</label>
+
+<input id="recipient"
+       maxlength="40"
+       placeholder="Someone special">
+
+<label for="greeting">3. Choose a greeting</label>
+
+<select id="greeting">
+
+  <option value="Merry Christmas!">
+    Merry Christmas!
+  </option>
+
+  <option value="Warmest Winter Wishes">
+    Warmest Winter Wishes
+  </option>
+
+  <option value="Wishing You Christmas Joy">
+    Wishing You Christmas Joy
+  </option>
+
+  <option value="Happy Holidays!">
+    Happy Holidays!
+  </option>
+
+  <option value="Thinking of You">
+    Thinking of You
+  </option>
+
+</select>
+
+<label for="message">4. Add a personal message</label>
+
+<textarea id="message"
+          maxlength="200"
+          placeholder="Write a little Christmas wish..."></textarea>
+
+<div class="counter">
+  <span id="count">0</span>/200
+</div>
+
+<label for="sender">5. Sign your postcard</label>
+
+<input id="sender"
+       maxlength="40"
+       placeholder="Your name">
+
+<h2 class="preview-title">Your Christmas Postcard</h2>
+
+<canvas id="postcard"
+        width="1200"
+        height="1200"
+        role="img"
+        aria-label="Preview of your personalized Christmas postcard">
+</canvas>
+
+<div class="actions">
+
+<button class="action" id="save" disabled>
+  Save Postcard
+</button>
+
+<button class="action secondary" id="reset">
+  Start Again
+</button>
+
+</div>
+
+<p id="status" aria-live="polite"></p>
+
+<p class="privacy">
+Your message stays on your device.
+Save your postcard and share it with someone you love.
+</p>
+
+</main>
+
+<script>
+
+const canvas = document.getElementById("postcard");
+const ctx = canvas.getContext("2d");
+
+const recipient = document.getElementById("recipient");
+const greeting = document.getElementById("greeting");
+const message = document.getElementById("message");
+const sender = document.getElementById("sender");
+const status = document.getElementById("status");
+const saveButton = document.getElementById("save");
+
+const designs = document.querySelectorAll(".design");
+
+let artwork = null;
+let imageVersion = 0;
+
+function loadArtwork(filename) {
+
+  const version = ++imageVersion;
+
+  artwork = null;
+  saveButton.disabled = true;
+
+  status.textContent = "Preparing your postcard...";
+
+  const image = new Image();
+
+  image.onload = function() {
+
+    if (version !== imageVersion) return;
+
+    artwork = image;
+
+    drawPostcard();
+
+    saveButton.disabled = false;
+
+    status.textContent = "";
+
+  };
+
+  image.onerror = function() {
+
+    if (version !== imageVersion) return;
+
+    status.textContent =
+      "The illustration could not load. Please try again.";
+
+  };
+
+  image.src = filename;
+
+}
+
+function fitText(text, size, maxWidth, style = "") {
+
+  let fontSize = size;
+
+  ctx.font = style + " " + fontSize + "px Georgia";
+
+  while (
+    ctx.measureText(text).width > maxWidth &&
+    fontSize > 18
+  ) {
+
+    fontSize--;
+
+    ctx.font =
+      style + " " + fontSize + "px Georgia";
+
+  }
+
+}
+
+function wrapText(text, maxWidth) {
+
+  const lines = [];
+
+  text.split("\n").forEach(paragraph => {
+
+    let line = "";
+
+    paragraph.split(/\s+/).forEach(word => {
+
+      const test = line ? line + " " + word : word;
+
+      if (ctx.measureText(test).width > maxWidth && line) {
+
+        lines.push(line);
+        line = word;
+
+      } else {
+
+        line = test;
+
+      }
+
+      while (ctx.measureText(line).width > maxWidth) {
+
+        let cut = line.length - 1;
+
+        while (
+          cut > 1 &&
+          ctx.measureText(line.slice(0, cut)).width > maxWidth
+        ) {
+          cut--;
+        }
+
+        lines.push(line.slice(0, cut));
+        line = line.slice(cut);
+
+      }
+
+    });
+
+    lines.push(line);
+
+  });
+
+  return lines;
+
+}
+
+function drawPostcard() {
+
+  if (!artwork) return;
+
+  const to = recipient.value.trim();
+  const from = sender.value.trim();
+
+  const wish = message.value.trim() ||
+    "May your Christmas be filled with little moments of joy.";
+
+  const imageWidth = 1120;
+  const imageHeight =
+    imageWidth * artwork.height / artwork.width;
+
+  let fontSize = 34;
+
+  ctx.font = fontSize + "px Georgia";
+
+  let lines = wrapText(wish, 1000);
+
+  while (lines.length > 7 && fontSize > 22) {
+
+    fontSize -= 2;
+
+    ctx.font = fontSize + "px Georgia";
+
+    lines = wrapText(wish, 1000);
+
+  }
+
+  const lineHeight = fontSize * 1.4;
+
+  canvas.height = Math.ceil(
+    imageHeight + 365 + lines.length * lineHeight
+  );
+
+  const height = canvas.height;
+
+  ctx.fillStyle = "#faf8f2";
+  ctx.fillRect(0, 0, 1200, height);
+
+  ctx.strokeStyle = "#b99a56";
+  ctx.lineWidth = 3;
+
+  ctx.strokeRect(18, 18, 1164, height - 36);
+
+  ctx.drawImage(
+    artwork,
+    40,
+    40,
+    imageWidth,
+    imageHeight
+  );
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  let y = imageHeight + 100;
+
+  ctx.fillStyle = "#18354a";
+
+  fitText(greeting.value, 57, 1040, "italic");
+
+  ctx.fillText(greeting.value, 600, y);
+
+  y += 68;
+
+  if (to) {
+
+    fitText("Dear " + to + ",", 36, 1000);
+
+    ctx.fillText("Dear " + to + ",", 600, y);
+
+  }
+
+  y += 55;
+
+  ctx.font = fontSize + "px Georgia";
+
+  lines.forEach(line => {
+
+    ctx.fillText(line, 600, y);
+
+    y += lineHeight;
+
+  });
+
+  y += 15;
+
+  if (from) {
+
+    fitText(from, 38, 1000, "italic");
+
+    ctx.fillText(from, 600, y);
+
+  }
+
+  ctx.fillStyle = "#b99a56";
+  ctx.font = "32px Georgia";
+
+  ctx.fillText("✧", 600, height - 80);
+
+  ctx.fillStyle = "#397d99";
+  ctx.font = "italic 25px Georgia";
+
+  ctx.fillText("Bluewater", 600, height - 45);
+
+}
+
+designs.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    designs.forEach(item => {
+
+      item.classList.remove("selected");
+      item.setAttribute("aria-pressed", "false");
+
+    });
+
+    button.classList.add("selected");
+    button.setAttribute("aria-pressed", "true");
+
+    loadArtwork(button.dataset.image);
+
+  });
+
+});
+
+[recipient, greeting, message, sender].forEach(field => {
+
+  field.addEventListener("input", () => {
+
+    document.getElementById("count").textContent =
+      message.value.length;
+
+    drawPostcard();
+
+  });
+
+});
+
+saveButton.addEventListener("click", () => {
+
+  if (!artwork) return;
+
+  try {
+
+    const link = document.createElement("a");
+
+    link.download = "Bluewater-Christmas-Postcard.png";
+
+    link.href = canvas.toDataURL("image/png");
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    status.textContent =
+      "Your postcard is ready to share!";
+
+  } catch (error) {
+
+    status.textContent =
+      "Unable to save. Please try another browser.";
+
+  }
+
+});
+
+document.getElementById("reset")
+  .addEventListener("click", () => {
+
+    recipient.value = "";
+    sender.value = "";
+    message.value = "";
+    greeting.selectedIndex = 0;
+
+    document.getElementById("count").textContent = "0";
+
+    designs[0].click();
+
+  });
+
+loadArtwork("day-11-01.png");
+
+</script>
+
+</body>
+</html>
