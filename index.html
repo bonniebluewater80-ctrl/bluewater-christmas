@@ -10,35 +10,28 @@
 /* Bluewater Christmas Animations */
 
 .village::before {
-  content: "";
+ content: "";
   position: absolute;
   left: 60.9%;
   top: 26%;
-  width: 28%;
-  height: 10%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 245, 190, .95),
-    rgba(255, 225, 130, .45),
-    transparent
+  width: 4%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #fff9cf 0%,
+    rgba(255, 220, 130, .5) 35%,
+    transparent 70%
   );
-  clip-path: polygon(0 50%, 100% 0, 100% 100%);
-  transform-origin: left center;
-  animation: lighthouseSweep 8s linear infinite;
+  transform: translate(-50%, -50%);
+  animation: lighthouseSweep 5s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
 }
 
 @keyframes lighthouseSweep {
-  0% {
-    transform: translateY(-50%) rotate(0deg);
-  }
-  50% {
-     transform: translateY(-50%) rotate(-180deg);
-  }
-  100% {
-    transform: translateY(-50%) rotate(-360deg);
-  }
+  0%, 100% { opacity: .15; }
+  50% { opacity: .95; }
 }
 
 .village::after {
