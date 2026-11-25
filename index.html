@@ -333,6 +333,70 @@ function openDoor(day) {
     `;
   }
 
+  if (unlocked && day === 4) {
+    document.getElementById("giftTitle").textContent =
+      "The Last Light in the Bookshop";
+
+    giftText.innerHTML = `
+      <img src="day-04.png"
+        alt="A snowy Christmas evening at the Amber and Ash Bookshop"
+        style="width:100%; border-radius:10px;">
+
+      <div style="text-align:left; line-height:1.6;">
+
+        <p>Snow had been falling since four, and by seven, the little village of Bluewater had settled in for the night.</p>
+
+        <p>Inside the Amber &amp; Ash Bookshop, Eileen was turning off the lamps when she noticed a young boy standing outside the window. His red mittens were pressed against the glass.</p>
+
+        <p>She opened the door.</p>
+
+        <p>“Looking for something?”</p>
+
+        <p>The boy reached into his coat pocket and pulled out a handful of coins.</p>
+
+        <p>“A book for my mom. She used to read all the time, but she doesn't much anymore.”</p>
+
+        <p>Eileen invited him inside. Piper lifted her head from beneath the counter. Closing time, it seemed, was negotiable.</p>
+
+        <p>Together, they wandered through the shelves until the boy stopped in front of a little blue book with gold lettering.</p>
+
+        <p>“That one,” he said.</p>
+
+        <p>He counted his coins on the counter. Two dollars and seventeen cents.</p>
+
+        <p>Eileen glanced at the price and then back at the boy.</p>
+
+        <p>“Well, would you look at that. That's exactly what we're charging for this book tonight.”</p>
+
+        <p>She wrapped it in brown paper and tied it with a silver and blue ribbon.</p>
+
+        <p>“Would you like to write something inside?”</p>
+
+        <p>He thought for a moment before carefully writing:</p>
+
+        <p style="font-style:italic; text-align:center;">
+        For Mom. So you can go everywhere without having to go anywhere.
+        </p>
+
+        <p>After he left, Eileen stood by the window, watching his little footprints disappear beneath the falling snow.</p>
+
+        <p>She had spent most of December worrying about sales, inventory and whether keeping a small bookshop open was still worth the trouble.</p>
+
+        <p>Funny how two dollars and seventeen cents could answer a question she'd been asking herself all year.</p>
+
+        <p>She turned off the last lamp, leaving only the Christmas lights glowing in the window.</p>
+
+        <p>Somehow, the shop didn't feel quite so dark.</p>
+
+        <p style="text-align:center; font-style:italic; margin-top:30px;">
+        An original Christmas story by Bonnie Bluewater
+        </p>
+
+      </div>
+    `;
+  }
+
+
   document.getElementById("gift").style.maxHeight = "85dvh";
   document.getElementById("gift").style.overflowY = "auto";
 
