@@ -421,6 +421,20 @@ function openDoor(day) {
         Save Recipe Card
       </a>
     `;
+  }  if (unlocked && day === 6) {
+    document.getElementById("giftTitle").textContent =
+      "A Letter to Next Christmas";
+
+    giftText.innerHTML = `
+      <iframe
+        src="day-06.html"
+        title="Bluewater Christmas Post Office"
+        style="width:100%;
+        height:850px;
+        border:none;
+        border-radius:10px;">
+      </iframe>
+    `;
   }
   document.getElementById("gift").style.maxHeight = "85dvh";
   document.getElementById("gift").style.overflowY = "auto";
