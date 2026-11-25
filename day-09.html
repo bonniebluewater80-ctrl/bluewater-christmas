@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bluewater Christmas Ornament Shop</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 8px;
+  background: #faf8f2;
+  color: #18354a;
+  font-family: Georgia, serif;
+  text-align: center;
+}
+
+.shop {
+  max-width: 650px;
+  margin: auto;
+}
+
+.banner {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: normal;
+  margin: 22px 0 8px;
+}
+
+.intro {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin: 12px auto;
+  border: 1px solid #dfd6c3;
+  border-radius: 12px;
+}
+
+.controls {
+  max-width: 420px;
+  margin: auto;
+}
+
+label {
+  display: block;
+  margin: 18px 0 8px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+select, input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #c9c1af;
+  border-radius: 8px;
+  background: #fffdf7;
+  color: #18354a;
+  font-family: Georgia, serif;
+  font-size: 16px;
+}
+
+.colors {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 58px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #18354a;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.swatch span {
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  border: 1px solid #aaa;
+}
+
+.swatch[aria-pressed="true"] span {
+  outline: 2px solid #18354a;
+  outline-offset: 3px;
+}
+
+.save {
+  width: 100%;
+  padding: 14px;
+  margin: 24px 0 8px;
+  background: #18354a;
+  color: white;
+  border: 1px solid #c5ad78;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.footer {
+  font-style: italic;
+  line-height: 1.6;
+  margin: 24px 0;
+}
+
+.signature {
+  color: #527f9e;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 4px;
+  }
+
+  .controls {
+    padding: 0 6px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="shop">
+
+<img class="banner"
+     src="day-09.png"
+     alt="The Bluewater Christmas Ornament Shop">
+
+<h2>Create Your Christmas Ornament</h2>
+
+<p class="intro">
+A little Christmas keepsake, designed by you.
+</p>
+
+<canvas id="ornament"
+        width="800"
+        height="800"
+        aria-label="Your personalized Christmas ornament">
+</canvas>
+
+<div class="controls">
+
+<label for="shape">Choose your shape</label>
+
+<select id="shape">
+  <option value="round">Round Bauble</option>
+  <option value="heart">Heart</option>
+  <option value="star">Star</option>
+</select>
+
+<label>Choose your color</label>
+
+<div class="colors">
+
+<button class="swatch"
+        data-color="#527f9e"
+        aria-pressed="true">
+  <span style="background:#527f9e"></span>
+  Ocean Blue
+</button>
+
+<button class="swatch"
+        data-color="#c1c6cc"
+        aria-pressed="false">
+  <span style="background:#c1c6cc"></span>
+  Silver
+</button>
+
+<button class="swatch"
+        data-color="#eee5d0"
+        aria-pressed="false">
+  <span style="background:#eee5d0"></span>
+  Ivory
+</button>
+
+<button class="swatch"
+        data-color="#9c3044"
+        aria-pressed="false">
+  <span style="background:#9c3044"></span>
+  Cranberry
+</button>
+
+</div>
+
+<label for="pattern">Choose your decoration</label>
+
+<select id="pattern">
+  <option value="snowflakes">Snowflakes</option>
+  <option value="stars">Delicate Stars</option>
+  <option value="gold">Gold Trim</option>
+</select>
+
+<label for="wish">Personalize your ornament</label>
+
+<input id="wish"
+       type="text"
+       maxlength="28"
+       value="Christmas 2026"
+       placeholder="Your name or Christmas wish">
+
+<button class="save" id="save">
+Save My Ornament
+</button>
+
+</div>
+
+<p class="footer">
+Every Christmas holds a little piece
+of who we are.
+</p>
+
+<p class="signature">Bluewater</p>
+
+</main>
+
+<script>
+
+const canvas = document.getElementById("ornament");
+const ctx = canvas.getContext("2d");
+
+let color = "#527f9e";
+
+function star(x, y, outer, inner, points = 5) {
+  ctx.beginPath();
+
+  for (let i = 0; i < points * 2; i++) {
+    const angle = i * Math.PI / points - Math.PI / 2;
+    const radius = i % 2 === 0 ? outer : inner;
+
+    const px = x + Math.cos(angle) * radius;
+    const py = y + Math.sin(angle) * radius;
+
+    if (i === 0) {
+      ctx.moveTo(px, py);
+    } else {
+      ctx.lineTo(px, py);
+    }
+  }
+
+  ctx.closePath();
+}
+
+function ornamentShape(shape) {
+
+  ctx.beginPath();
+
+  if (shape === "round") {
+    ctx.arc(400, 395, 225, 0, Math.PI * 2);
+  }
+
+  if (shape === "heart") {
+    ctx.moveTo(400, 615);
+    ctx.bezierCurveTo(80, 410, 130, 175, 300, 210);
+    ctx.bezierCurveTo(350, 215, 385, 245, 400, 280);
+    ctx.bezierCurveTo(415, 245, 450, 215, 500, 210);
+    ctx.bezierCurveTo(670, 175, 720, 410, 400, 615);
+  }
+
+  if (shape === "star") {
+    star(400, 410, 240, 120);
+  }
+
+  ctx.closePath();
+}
+
+function snowflake(x, y, size) {
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+
+  for (let i = 0; i < 6; i++) {
+
+    ctx.rotate(Math.PI / 3);
+    ctx.beginPath();
+
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -size);
+
+    ctx.moveTo(0, -size * 0.65);
+    ctx.lineTo(-size * 0.22, -size * 0.85);
+
+    ctx.moveTo(0, -size * 0.65);
+    ctx.lineTo(size * 0.22, -size * 0.85);
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawOrnament() {
+
+  const shape = document.getElementById("shape").value;
+  const pattern = document.getElementById("pattern").value;
+  const wish = document.getElementById("wish").value;
+
+  ctx.clearRect(0, 0, 800, 800);
+
+  // Soft winter background
+
+  const background = ctx.createLinearGradient(0, 0, 800, 800);
+  background.addColorStop(0, "#fffdf7");
+  background.addColorStop(1, "#e4edf2");
+
+  ctx.fillStyle = background;
+  ctx.fillRect(0, 0, 800, 800);
+
+  // Hanging ribbon
+
+  ctx.strokeStyle = "#b49b61";
+  ctx.lineWidth = 5;
+
+  ctx.beginPath();
+  ctx.moveTo(400, 0);
+  ctx.lineTo(400, 112);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.ellipse(400, 132, 20, 25, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Ornament shadow
+
+  ctx.save();
+
+  ctx.shadowColor = "rgba(30,45,60,0.22)";
+  ctx.shadowBlur = 25;
+  ctx.shadowOffsetY = 12;
+
+  ornamentShape(shape);
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  ctx.restore();
+
+  // Glass finish
+
+  ctx.save();
+  ornamentShape(shape);
+  ctx.clip();
+
+  ctx.fillStyle = color;
+  ctx.fillRect(100, 150, 600, 520);
+
+  const glass = ctx.createRadialGradient(
+    310, 280, 10,
+    400, 400, 300
+  );
+
+  glass.addColorStop(0, "rgba(255,255,255,0.65)");
+  glass.addColorStop(0.5, "rgba(255,255,255,0.08)");
+  glass.addColorStop(1, "rgba(0,0,0,0.20)");
+
+  ctx.fillStyle = glass;
+  ctx.fillRect(100, 150, 600, 520);
+
+  const lightColor =
+    color === "#eee5d0" || color === "#c1c6cc";
+
+  // Decorative patterns
+
+  ctx.strokeStyle = lightColor ? "#a78a4c" : "#fffdf5";
+  ctx.fillStyle = lightColor ? "#a78a4c" : "#fff5d6";
+
+  if (pattern === "snowflakes") {
+    snowflake(400, 305, 36);
+    snowflake(265, 355, 28);
+    snowflake(535, 355, 28);
+    snowflake(400, 510, 35);
+  }
+
+  if (pattern === "stars") {
+
+    const positions = [
+      [400, 300],
+      [270, 350],
+      [530, 350],
+      [330, 510],
+      [470, 510]
+    ];
+
+    positions.forEach(([x, y]) => {
+      star(x, y, 22, 8, 4);
+      ctx.fill();
+    });
+  }
+
+  if (pattern === "gold") {
+
+    ctx.strokeStyle = "#d6b36b";
+    ctx.lineWidth = 7;
+
+    [310, 490].forEach(y => {
+
+      ctx.beginPath();
+      ctx.moveTo(150, y);
+      ctx.quadraticCurveTo(400, y + 100, 650, y);
+      ctx.stroke();
+
+    });
+  }
+
+  // Personalized message
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = lightColor ? "#18354a" : "#fffdf5";
+
+  let fontSize = 34;
+
+  ctx.font = "italic " + fontSize + "px Georgia";
+
+  const maxWidth = shape === "star" ? 210 : 330;
+
+  while (ctx.measureText(wish).width > maxWidth && fontSize > 12) {
+    fontSize--;
+    ctx.font = "italic " + fontSize + "px Georgia";
+  }
+
+  ctx.fillText(wish, 400, 415, maxWidth);
+
+  ctx.restore();
+
+  // Metallic ornament cap
+
+  const cap = ctx.createLinearGradient(365, 0, 435, 0);
+
+  cap.addColorStop(0, "#9c8149");
+  cap.addColorStop(0.5, "#f2dca3");
+  cap.addColorStop(1, "#a88b50");
+
+  const capY = shape === "heart" ? 254 : 151;
+
+  if (shape === "heart") {
+    ctx.strokeStyle = "#b49b61";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(400, 155);
+    ctx.lineTo(400, capY);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = cap;
+  ctx.fillRect(365, capY, 70, 30);
+
+  // Keepsake branding
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#18354a";
+  ctx.font = "22px Georgia";
+  ctx.fillText("Christmas at Bluewater", 400, 700);
+
+  ctx.fillStyle = "#527f9e";
+  ctx.font = "italic 30px Georgia";
+  ctx.fillText("Bluewater", 400, 748);
+}
+
+document.querySelectorAll(".swatch").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    color = button.dataset.color;
+
+    document.querySelectorAll(".swatch").forEach(item => {
+      item.setAttribute("aria-pressed", "false");
+    });
+
+    button.setAttribute("aria-pressed", "true");
+
+    drawOrnament();
+  });
+});
+
+document.getElementById("shape")
+  .addEventListener("change", drawOrnament);
+
+document.getElementById("pattern")
+  .addEventListener("change", drawOrnament);
+
+document.getElementById("wish")
+  .addEventListener("input", drawOrnament);
+
+document.getElementById("save")
+  .addEventListener("click", () => {
+
+    const link = document.createElement("a");
+
+    link.download = "My-Bluewater-Christmas-Ornament.png";
+    link.href = canvas.toDataURL("image/png");
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  });
+
+drawOrnament();
+
+</script>
+
+</body>
+</html>
