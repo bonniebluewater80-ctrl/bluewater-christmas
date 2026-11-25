@@ -6,7 +6,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christmas at Bluewater</title>
 <style>
-* { box-sizing: border-box; }
+
+/* Bluewater Christmas Animations */
+
+.village::before {
+  content: "";
+  position: absolute;
+  left: 60.8%;
+  top: 26%;
+  width: 25%;
+  height: 12%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 224, 140, .65),
+    rgba(255, 235, 170, 0)
+  );
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  transform-origin: left center;
+  animation: lighthouseSweep 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes lighthouseSweep {
+  0%, 100% {
+    transform: rotate(-15deg) scaleX(1);
+    opacity: .3;
+  }
+  50% {
+    transform: rotate(12deg) scaleX(-1);
+    opacity: .8;
+  }
+}
+
+.village::after {
+  content: "";
+  position: absolute;
+  left: 54.5%;
+  top: 60%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff9cf;
+  box-shadow:
+    0 0 10px 4px #ffe8a0,
+    -18px 25px 9px 3px #fff3b0,
+    20px 35px 9px 3px #fff3b0,
+    -35px 60px 9px 3px #ffe8a0,
+    30px 75px 9px 3px #fff3b0,
+    -12px 95px 9px 3px #ffe8a0;
+  animation: treeTwinkle 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes treeTwinkle {
+  0%, 100% { opacity: .2; }
+  50% { opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .village::before,
+  .village::after {
+    display: none;
+  }
+}
+
+  * { box-sizing: border-box; }
 body {
   margin: 0;
   background: #102b46;
