@@ -396,7 +396,32 @@ function openDoor(day) {
     `;
   }
 
+  if (unlocked && day === 5) {
+    document.getElementById("giftTitle").textContent =
+      "The Bluewater Café's Christmas Hot Chocolate";
 
+    giftText.innerHTML = `
+      <p>Two mugs. A little warmth. A moment to share.</p>
+
+      <img src="day-05.png"
+        alt="Bluewater Café Christmas Hot Chocolate Recipe"
+        style="width:100%; border-radius:10px;">
+
+      <p>Save this little Christmas recipe to enjoy whenever you need a warm moment.</p>
+
+      <a href="day-05.png"
+        download="Bluewater-Christmas-Hot-Chocolate.png"
+        style="display:inline-block;
+        background:#18354a;
+        color:#ffffff;
+        padding:12px 22px;
+        border-radius:8px;
+        text-decoration:none;
+        margin:12px 0;">
+        Save Recipe Card
+      </a>
+    `;
+  }
   document.getElementById("gift").style.maxHeight = "85dvh";
   document.getElementById("gift").style.overflowY = "auto";
 
