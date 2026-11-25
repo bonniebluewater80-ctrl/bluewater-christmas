@@ -27,9 +27,15 @@ body {
 }
 
 h1 {
-  font-size: 25px;
+  font-size: 26px;
   font-weight: normal;
   margin: 8px 0;
+}
+
+.decor {
+  color: #b69a58;
+  font-size: 22px;
+  letter-spacing: 8px;
 }
 
 .intro {
@@ -39,7 +45,7 @@ h1 {
 .progress {
   font-size: 13px;
   color: #617785;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   margin: 15px 0;
 }
 
@@ -55,7 +61,7 @@ img {
 button {
   background: #18354a;
   color: white;
-  border: none;
+  border: 1px solid #b69a58;
   border-radius: 8px;
   padding: 12px 20px;
   font-size: 16px;
@@ -63,16 +69,44 @@ button {
   cursor: pointer;
 }
 
+.sound {
+  background: transparent;
+  color: #617785;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: 1px solid #d8c9a5;
+}
+
 .answer {
-  font-size: 20px;
+  font-size: 21px;
+  color: #18354a;
+  margin: 15px 0 5px;
+}
+
+.quote {
+  font-size: 17px;
+  font-style: italic;
   color: #356d62;
+  margin: 10px 0 18px;
+}
+
+.reveal-box {
+  border-top: 1px solid #d8c9a5;
+  border-bottom: 1px solid #d8c9a5;
   margin: 15px 0;
+  padding: 6px;
+  animation: fadeIn 0.6s ease;
 }
 
 .footer {
   font-style: italic;
   font-size: 14px;
   margin-top: 22px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 [hidden] {
@@ -96,6 +130,12 @@ button {
     max-height: 340px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-box {
+    animation: none;
+  }
+}
 </style>
 </head>
 
@@ -103,12 +143,19 @@ button {
 
 <main class="cinema">
 
-<h1>Name That Christmas Movie</h1>
+<div class="decor" aria-hidden="true">✧ ✦ ✧</div>
+
+<h1>The Bluewater Christmas Cinema</h1>
 
 <p class="intro">
 Five familiar scenes. Five Christmas classics.
 How many do you recognize?
 </p>
+
+<button class="sound" id="soundButton"
+onclick="toggleSound()" aria-pressed="true">
+♫ Sound On
+</button>
 
 <section id="game">
 
@@ -116,7 +163,14 @@ How many do you recognize?
 
 <img id="clue" alt="Christmas movie clue">
 
-<p id="answer" class="answer" aria-live="polite" hidden></p>
+<div id="revealBox" class="reveal-box"
+aria-live="polite" hidden>
+
+<p id="answer" class="answer"></p>
+
+<p id="quote" class="quote"></p>
+
+</div>
 
 <button id="reveal" onclick="revealMovie()">
 Reveal Movie
@@ -129,6 +183,8 @@ Next Movie
 </section>
 
 <section id="finished" hidden>
+
+<div class="decor" aria-hidden="true">✧ ✦ ✧</div>
 
 <h1>That's a Wrap!</h1>
 
@@ -158,36 +214,113 @@ const movies = [
   {
     image: "day-07-01.png",
     title: "A Christmas Story (1983)",
-    clue: "A glowing leg lamp in a snowy window"
+    clue: "A glowing leg lamp in a snowy window",
+    quote: "You'll shoot your eye out!"
   },
   {
     image: "day-07-02.png",
     title: "Elf (2003)",
-    clue: "Spaghetti topped with syrup and candy"
+    clue: "Spaghetti topped with syrup and candy",
+    quote: "Santa! I know him!"
   },
   {
     image: "day-07-03.png",
     title: "Home Alone (1990)",
-    clue: "Toy cars scattered across a hallway"
+    clue: "Toy cars scattered across a hallway",
+    quote: "Keep the change, ya filthy animal."
   },
   {
     image: "day-07-04.png",
     title: "National Lampoon's Christmas Vacation (1989)",
-    clue: "A house covered in Christmas lights"
+    clue: "A house covered in Christmas lights",
+    quote: "The little lights are not twinkling."
   },
   {
     image: "day-07-05.png",
     title: "Christmas with the Kranks (2004)",
-    clue: "A snowman decoration on a rooftop"
+    clue: "A snowman decoration on a rooftop",
+    quote: "Free Frosty!"
   }
 ];
 
 let current = 0;
+let soundOn = true;
+let audioContext;
+
+function toggleSound() {
+  soundOn = !soundOn;
+
+  const button = document.getElementById("soundButton");
+
+  button.textContent =
+    soundOn ? "♫ Sound On" : "Sound Off";
+
+  button.setAttribute("aria-pressed", soundOn);
+
+  if (soundOn) {
+    playChime(false);
+  }
+}
+
+async function playChime(celebration) {
+
+  if (!soundOn) return;
+
+  try {
+    const AudioContext =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    if (!audioContext) {
+      audioContext = new AudioContext();
+    }
+
+    await audioContext.resume();
+
+    if (!soundOn) return;
+
+    const notes = celebration
+      ? [523.25, 659.25, 783.99]
+      : [783.99];
+
+    notes.forEach((frequency, index) => {
+
+      const oscillator = audioContext.createOscillator();
+      const volume = audioContext.createGain();
+
+      const start =
+        audioContext.currentTime + index * 0.18;
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+
+      volume.gain.setValueAtTime(0.001, start);
+
+      volume.gain.exponentialRampToValueAtTime(
+        0.12, start + 0.02
+      );
+
+      volume.gain.exponentialRampToValueAtTime(
+        0.001, start + 0.7
+      );
+
+      oscillator.connect(volume);
+      volume.connect(audioContext.destination);
+
+      oscillator.start(start);
+      oscillator.stop(start + 0.75);
+    });
+
+  } catch (error) {
+    console.log("Sound unavailable");
+  }
+}
 
 function showMovie() {
 
   document.getElementById("progress").textContent =
-    "Movie " + (current + 1) + " of " + movies.length;
+    "MOVIE " + (current + 1) + " OF " + movies.length;
 
   document.getElementById("clue").src =
     movies[current].image;
@@ -196,7 +329,9 @@ function showMovie() {
     movies[current].clue;
 
   document.getElementById("answer").textContent = "";
-  document.getElementById("answer").hidden = true;
+  document.getElementById("quote").textContent = "";
+
+  document.getElementById("revealBox").hidden = true;
   document.getElementById("reveal").hidden = false;
   document.getElementById("next").hidden = true;
 
@@ -208,14 +343,17 @@ function showMovie() {
 
 function revealMovie() {
 
+  playChime(false);
+
   document.getElementById("answer").textContent =
     movies[current].title;
 
-  document.getElementById("answer").hidden = false;
+  document.getElementById("quote").textContent =
+    "“" + movies[current].quote + "”";
+
+  document.getElementById("revealBox").hidden = false;
   document.getElementById("reveal").hidden = true;
   document.getElementById("next").hidden = false;
-
-  document.getElementById("next").focus();
 }
 
 function nextMovie() {
@@ -223,8 +361,12 @@ function nextMovie() {
   current++;
 
   if (current >= movies.length) {
+
     document.getElementById("game").hidden = true;
     document.getElementById("finished").hidden = false;
+
+    playChime(true);
+
   } else {
     showMovie();
   }
