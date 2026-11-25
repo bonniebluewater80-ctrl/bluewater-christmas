@@ -116,6 +116,47 @@ body {
   .shop {
     padding: 4px;
   }
+}.artwork::after {
+  content: "";
+  position: absolute;
+  left: 6.5%;
+  top: 62.5%;
+  width: 26.4%;
+  height: 9%;
+  border-radius: 50%;
+  background: conic-gradient(
+    transparent 0deg,
+    rgba(255,255,255,0.25) 35deg,
+    transparent 75deg,
+    transparent 180deg,
+    rgba(255,255,255,0.18) 215deg,
+    transparent 255deg
+  );
+  pointer-events: none;
+  opacity: 0;
+}
+
+.artwork.playing::after {
+  opacity: 1;
+  animation: spinVinyl 2.4s linear infinite;
+}
+
+@keyframes spinVinyl {
+  from {
+    transform: scaleY(4.4) scaleY(0.227);
+    background-position: 0% 50%;
+    rotate: 0deg;
+  }
+  to {
+    rotate: 0deg;
+    transform: scaleY(0.227) rotate(360deg) scaleY(4.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artwork.playing::after {
+    animation: none;
+  }
 }
 </style>
 </head>
@@ -242,7 +283,7 @@ let finishTimer;
 let playVersion = 0;
 
 function stopMusic() {
-
+document.querySelector(".artwork").classList.remove("playing");
   playVersion++;
   clearTimeout(finishTimer);
 
@@ -341,7 +382,7 @@ async function playSong(key) {
     await audioContext.resume();
 
     if (version !== playVersion) return;
-
+document.querySelector(".artwork").classList.add("playing");
     document.getElementById(key)
       .classList.add("active");
 
