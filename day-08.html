@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bluewater Christmas Music Shop</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 8px;
+  background: #fffdf7;
+  color: #18354a;
+  font-family: Georgia, serif;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.shop {
+  max-width: 750px;
+  margin: auto;
+}
+
+.artwork {
+  position: relative;
+  width: 100%;
+}
+
+.artwork img {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.song {
+  position: absolute;
+  left: 42%;
+  width: 38%;
+  height: 9%;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 25px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.song:hover,
+.song:focus-visible {
+  background: rgba(255,255,255,0.2);
+  border-color: #b69a58;
+}
+
+.song.active {
+  background: rgba(53,109,98,0.15);
+  border-color: #356d62;
+  box-shadow: 0 0 12px #b69a58;
+}
+
+#silent {
+  top: 46%;
+}
+
+#noel {
+  top: 57%;
+}
+
+#tree {
+  top: 68%;
+}
+
+.now-playing {
+  color: #356d62;
+  font-size: 17px;
+  margin: 18px 0 8px;
+  min-height: 26px;
+}
+
+.stop {
+  background: #356d62;
+  color: white;
+  border: 1px solid #b69a58;
+  border-radius: 8px;
+  padding: 13px 25px;
+  font-size: 16px;
+  width: 80%;
+  max-width: 280px;
+  cursor: pointer;
+}
+
+.stop:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.message {
+  font-style: italic;
+  font-size: 15px;
+  margin: 22px 10px;
+}
+
+.footer {
+  font-style: italic;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+  }
+
+  .shop {
+    padding: 4px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="shop">
+
+<div class="artwork">
+
+<img src="day-08.png"
+alt="The Bluewater Christmas Music Shop">
+
+<button class="song" id="silent"
+aria-label="Play Silent Night"
+onclick="playSong('silent')"></button>
+
+<button class="song" id="noel"
+aria-label="Play The First Noel"
+onclick="playSong('noel')"></button>
+
+<button class="song" id="tree"
+aria-label="Play O Christmas Tree"
+onclick="playSong('tree')"></button>
+
+</div>
+
+<p id="status" class="now-playing"
+aria-live="polite">
+Choose a Christmas carol above.
+</p>
+
+<button class="stop" id="stopButton"
+onclick="stopMusic()" disabled>
+Stop Music
+</button>
+
+<p class="message">
+A little Christmas music, a quiet moment,
+and nowhere else you need to be.
+</p>
+
+<p class="footer">Bluewater</p>
+
+</main>
+
+<script>
+
+const songs = {
+
+silent: {
+  title: "Silent Night",
+  tempo: 0.55,
+  notes: [
+    [67,1.5],[69,0.5],[67,1],[64,3],
+    [67,1.5],[69,0.5],[67,1],[64,3],
+    [74,2],[74,1],[71,3],
+    [72,2],[72,1],[67,3],
+    [69,2],[69,1],[72,1.5],[71,0.5],
+    [69,1],[67,1.5],[69,0.5],[67,1],[64,3],
+    [69,2],[69,1],[72,1.5],[71,0.5],
+    [69,1],[67,1.5],[69,0.5],[67,1],[64,3],
+    [74,2],[74,1],[77,1.5],[74,0.5],
+    [71,1],[72,3],[76,3],
+    [72,1],[67,1],[64,1],
+    [67,1.5],[65,0.5],[62,1],[60,4]
+  ]
+},
+
+noel: {
+  title: "The First Noel",
+  tempo: 0.48,
+  notes: [
+    [64,0.5],[62,0.5],[60,1.5],[62,0.5],
+    [64,0.5],[65,0.5],[67,2],
+    [69,0.5],[71,0.5],[72,1],[71,1],
+    [69,1],[67,2],
+    [69,0.5],[71,0.5],[72,1],[71,1],
+    [69,1],[67,1],[69,1],[71,1],
+    [72,1],[67,1],[65,1],[64,3],
+    [64,0.5],[62,0.5],[60,1.5],[62,0.5],
+    [64,0.5],[65,0.5],[67,2],
+    [69,0.5],[71,0.5],[72,1],[71,1],
+    [69,1],[67,2],
+    [69,0.5],[71,0.5],[72,1],[71,1],
+    [69,1],[67,1],[69,1],[71,1],
+    [72,1],[67,1],[65,1],[64,3],
+    [64,0.5],[62,0.5],[60,2],
+    [64,0.5],[65,0.5],[67,2],
+    [72,0.5],[71,0.5],[69,2],
+    [69,0.5],[71,0.5],[72,2],
+    [67,1],[65,1],[64,1],[62,1],[60,4]
+  ]
+},
+
+tree: {
+  title: "O Christmas Tree",
+  tempo: 0.46,
+  notes: [
+    [55,1],[60,1.5],[60,0.5],[60,1],
+    [62,1],[64,1.5],[64,0.5],[64,1],
+    [64,0.5],[62,0.5],[64,1],[65,1],
+    [59,1],[62,1],[60,2],
+    [55,1],[60,1.5],[60,0.5],[60,1],
+    [62,1],[64,1.5],[64,0.5],[64,1],
+    [64,0.5],[62,0.5],[64,1],[65,1],
+    [59,1],[62,1],[60,2],
+    [67,1],[67,0.5],[64,0.5],[69,1],
+    [67,1],[67,0.5],[65,0.5],[65,1],
+    [65,1],[65,0.5],[62,0.5],[67,1],
+    [65,1],[65,0.5],[64,0.5],[64,1],
+    [55,1],[60,1.5],[60,0.5],[60,1],
+    [62,1],[64,1.5],[64,0.5],[64,1],
+    [64,0.5],[62,0.5],[64,1],[65,1],
+    [59,1],[62,1],[60,3]
+  ]
+}
+
+};
+
+let audioContext;
+let activeNotes = [];
+let finishTimer;
+let playVersion = 0;
+
+function stopMusic() {
+
+  playVersion++;
+  clearTimeout(finishTimer);
+
+  activeNotes.forEach(note => {
+    try {
+      note.stop();
+    } catch (error) {}
+  });
+
+  activeNotes = [];
+
+  document.querySelectorAll(".song")
+    .forEach(button => {
+      button.classList.remove("active");
+      button.setAttribute("aria-pressed", "false");
+    });
+
+  document.getElementById("status").textContent =
+    "Choose a Christmas carol above.";
+
+  document.getElementById("stopButton").disabled =
+    true;
+}
+
+function musicNote(pitch, start, duration) {
+
+  const frequency =
+    440 * Math.pow(2, (pitch - 69) / 12);
+
+  const harmonics = [
+    [1, 0.09],
+    [2, 0.025],
+    [3, 0.008]
+  ];
+
+  harmonics.forEach(([multiple, level]) => {
+
+    const oscillator =
+      audioContext.createOscillator();
+
+    const volume =
+      audioContext.createGain();
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.value =
+      frequency * multiple;
+
+    volume.gain.setValueAtTime(0.0001, start);
+
+    volume.gain.exponentialRampToValueAtTime(
+      level, start + 0.015
+    );
+
+    volume.gain.exponentialRampToValueAtTime(
+      0.0001, start + duration + 0.35
+    );
+
+    oscillator.connect(volume);
+    volume.connect(audioContext.destination);
+
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.4);
+
+    oscillator.onended = () => {
+      oscillator.disconnect();
+      volume.disconnect();
+    };
+
+    activeNotes.push(oscillator);
+
+  });
+}
+
+async function playSong(key) {
+
+  stopMusic();
+
+  const version = playVersion;
+  const song = songs[key];
+
+  try {
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) {
+      throw new Error("Audio unavailable");
+    }
+
+    if (!audioContext) {
+      audioContext = new AudioContext();
+    }
+
+    await audioContext.resume();
+
+    if (version !== playVersion) return;
+
+    document.getElementById(key)
+      .classList.add("active");
+
+    document.getElementById(key)
+      .setAttribute("aria-pressed", "true");
+
+    document.getElementById("status").textContent =
+      "♫ Now Playing: " + song.title;
+
+    document.getElementById("stopButton").disabled =
+      false;
+
+    let time = audioContext.currentTime + 0.1;
+
+    song.notes.forEach(([pitch, beats]) => {
+
+      const duration = beats * song.tempo;
+
+      musicNote(pitch, time, duration);
+
+      time += duration;
+
+    });
+
+    finishTimer = setTimeout(() => {
+
+      if (version !== playVersion) return;
+
+      stopMusic();
+
+      document.getElementById("status").textContent =
+        "Choose another carol, or enjoy the quiet.";
+
+    }, (time - audioContext.currentTime + 0.5) * 1000);
+
+  } catch (error) {
+
+    if (version !== playVersion) return;
+
+    stopMusic();
+
+    document.getElementById("status").textContent =
+      "Music is unavailable. Please try another browser.";
+
+  }
+}
+
+window.addEventListener("pagehide", stopMusic);
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stopMusic();
+  }
+});
+
+window.addEventListener("message", event => {
+  if (
+    event.origin === window.location.origin &&
+    event.source === window.parent &&
+    event.data === "stopBluewaterMusic"
+  ) {
+    stopMusic();
+  }
+});
+
+</script>
+
+</body>
+</html>
