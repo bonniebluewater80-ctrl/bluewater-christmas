@@ -309,7 +309,9 @@ function openDoor(day) {
 
 
   document.getElementById("gift").showModal();
-}
+requestAnimationFrame(() => {
+  document.getElementById("gift").scrollTop = 0;
+});}
 
 doors.forEach(([x, y], i) => {
   const day = i + 1;
