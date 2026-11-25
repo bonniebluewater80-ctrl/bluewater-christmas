@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bluewater Christmas Cinema</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 8px;
+  background: #fffdf7;
+  color: #18354a;
+  font-family: Georgia, serif;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.cinema {
+  max-width: 550px;
+  margin: auto;
+  padding: 12px;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: normal;
+  margin: 8px 0;
+}
+
+.intro {
+  font-size: 15px;
+}
+
+.progress {
+  font-size: 13px;
+  color: #617785;
+  letter-spacing: 1px;
+  margin: 15px 0;
+}
+
+img {
+  display: block;
+  width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin: auto;
+}
+
+button {
+  background: #18354a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  margin: 6px;
+  cursor: pointer;
+}
+
+.answer {
+  font-size: 20px;
+  color: #356d62;
+  margin: 15px 0;
+}
+
+.footer {
+  font-style: italic;
+  font-size: 14px;
+  margin-top: 22px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+  }
+
+  .cinema {
+    padding: 6px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  img {
+    max-height: 340px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="cinema">
+
+<h1>Name That Christmas Movie</h1>
+
+<p class="intro">
+Five familiar scenes. Five Christmas classics.
+How many do you recognize?
+</p>
+
+<section id="game">
+
+<p class="progress" id="progress"></p>
+
+<img id="clue" alt="Christmas movie clue">
+
+<p id="answer" class="answer" aria-live="polite" hidden></p>
+
+<button id="reveal" onclick="revealMovie()">
+Reveal Movie
+</button>
+
+<button id="next" onclick="nextMovie()" hidden>
+Next Movie
+</button>
+
+</section>
+
+<section id="finished" hidden>
+
+<h1>That's a Wrap!</h1>
+
+<p>
+How many Christmas movies did you recognize?
+</p>
+
+<p>
+Perhaps tonight calls for a Christmas movie,
+a cozy blanket and a mug of hot chocolate
+from the Bluewater Café.
+</p>
+
+<button onclick="restartGame()">
+Play Again
+</button>
+
+</section>
+
+<p class="footer">Bluewater</p>
+
+</main>
+
+<script>
+
+const movies = [
+  {
+    image: "day-07-01.png",
+    title: "A Christmas Story (1983)",
+    clue: "A glowing leg lamp in a snowy window"
+  },
+  {
+    image: "day-07-02.png",
+    title: "Elf (2003)",
+    clue: "Spaghetti topped with syrup and candy"
+  },
+  {
+    image: "day-07-03.png",
+    title: "Home Alone (1990)",
+    clue: "Toy cars scattered across a hallway"
+  },
+  {
+    image: "day-07-04.png",
+    title: "National Lampoon's Christmas Vacation (1989)",
+    clue: "A house covered in Christmas lights"
+  },
+  {
+    image: "day-07-05.png",
+    title: "Christmas with the Kranks (2004)",
+    clue: "A snowman decoration on a rooftop"
+  }
+];
+
+let current = 0;
+
+function showMovie() {
+
+  document.getElementById("progress").textContent =
+    "Movie " + (current + 1) + " of " + movies.length;
+
+  document.getElementById("clue").src =
+    movies[current].image;
+
+  document.getElementById("clue").alt =
+    movies[current].clue;
+
+  document.getElementById("answer").textContent = "";
+  document.getElementById("answer").hidden = true;
+  document.getElementById("reveal").hidden = false;
+  document.getElementById("next").hidden = true;
+
+  document.getElementById("next").textContent =
+    current === movies.length - 1
+    ? "Finish Game"
+    : "Next Movie";
+}
+
+function revealMovie() {
+
+  document.getElementById("answer").textContent =
+    movies[current].title;
+
+  document.getElementById("answer").hidden = false;
+  document.getElementById("reveal").hidden = true;
+  document.getElementById("next").hidden = false;
+
+  document.getElementById("next").focus();
+}
+
+function nextMovie() {
+
+  current++;
+
+  if (current >= movies.length) {
+    document.getElementById("game").hidden = true;
+    document.getElementById("finished").hidden = false;
+  } else {
+    showMovie();
+  }
+
+  window.scrollTo(0, 0);
+}
+
+function restartGame() {
+
+  current = 0;
+
+  document.getElementById("finished").hidden = true;
+  document.getElementById("game").hidden = false;
+
+  showMovie();
+  window.scrollTo(0, 0);
+}
+
+showMovie();
+
+</script>
+
+</body>
+</html>
