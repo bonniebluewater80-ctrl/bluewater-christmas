@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Christmas at Bluewater</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #102b46;
+  color: #fff8e9;
+  font-family: Georgia, serif;
+  text-align: center;
+}
+main {
+  max-width: 1400px;
+  margin: auto;
+  padding: 12px;
+}
+.village {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.village img {
+  width: 100%;
+  display: block;
+}
+.door {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 8%;
+  height: 13%;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 2;
+  touch-action: manipulation;
+}
+.door:hover, .door:focus-visible {
+  background: #ffe9a333;
+  border-color: #fff0b0;
+  box-shadow: 0 0 20px #ffda80;
+}
+.snow {
+  position: absolute;
+  top: -15px;
+  color: white;
+  pointer-events: none;
+  animation: fall linear infinite;
+  opacity: .7;
+}
+@keyframes fall {
+  to { transform: translate(25px, 85vw); }
+}
+dialog {
+  width: min(90%, 440px);
+  background: #fffaf0;
+  color: #173a53;
+  border: 2px solid #c9a76b;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 40px #0005;
+}
+dialog::backdrop {
+  background: #081c30aa;
+}
+.close {
+  background: #173a53;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+.day-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px auto;
+}
+.day-list button {
+  background: #fff8e9;
+  color: #173a53;
+  border: 1px solid #c9a76b;
+  border-radius: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+footer {
+  font-size: 14px;
+  padding: 15px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .snow { display: none; }
+}
+</style>
+</head>
+<body>
+<main>
+  <p id="countdown"></p>
+  <div class="village" id="village">
+    <img id="art"
+      src="christmas-%20village.png"
+      alt="Christmas at Bluewater Advent Calendar">
+  </div>
+  <p>Choose a numbered door to discover a little Christmas joy.</p>
+  <div class="day-list" id="dayList"></div>
+  <footer>
+    A Christmas gift from Amber &amp; Ash
+    <p>Made with love at Bluewater.</p>
+  </footer>
+</main>
+
+<dialog id="gift">
+  <h2 id="giftTitle"></h2>
+  <p id="giftText"></p>
+  <button class="close"
+    onclick="document.getElementById('gift').close()">
+    Close
+  </button>
+</dialog>
+
+<script>
+const preview = new URLSearchParams(
+  location.search
+).get("preview") === "1";
+
+const art = document.getElementById("art");
+art.onerror = function() {
+  art.onerror = null;
+  art.src = "christmas-village.png";
+};
+
+const doors = [
+  [7.6, 62],
+  [18.2, 62],
+  [12.6, 29],
+  [30.5, 34],
+  [42.3, 36],
+  [88.1, 28],
+  [33.1, 59],
+  [42.9, 59],
+  [74.8, 57],
+  [93.3, 57],
+  [74.8, 73],
+  [92.2, 73]
+];
+
+const gifts = [
+  "Welcome to Christmas at Bluewater",
+  "A Little Christmas Inspiration",
+  "Christmas Word Puzzle",
+  "A Winter Story",
+  "Meanwhile at Bluewater",
+  "Winter Phone Wallpaper",
+  "A Christmas Memory",
+  "Christmas Trivia",
+  "A Winter Solstice Reflection",
+  "A Surprise from Piper",
+  "Christmas Bookmark",
+  "A Christmas Eve Letter"
+];
+
+const village = document.getElementById("village");
+const dayList = document.getElementById("dayList");
+
+function openDate(day) {
+  return new Date(2026, 11, 12 + day);
+}
+
+function openDoor(day) {
+  const date = openDate(day);
+  const unlocked = preview || new Date() >= date;
+
+  document.getElementById("giftTitle").textContent =
+    unlocked ? gifts[day - 1] : "A little more waiting!";
+
+  document.getElementById("giftText").textContent =
+    unlocked
+    ? "Your special Christmas surprise for Day " +
+      day + " will appear here."
+    : "This little surprise opens December " +
+      (12 + day) + ". Come back then!";
+
+  document.getElementById("gift").showModal();
+}
+
+doors.forEach(([x, y], i) => {
+  const day = i + 1;
+  const button = document.createElement("button");
+  button.className = "door";
+  button.style.left = x + "%";
+  button.style.top = y + "%";
+  button.setAttribute("aria-label", "Open door " + day);
+  button.onclick = () => openDoor(day);
+  village.appendChild(button);
+
+  const shortcut = document.createElement("button");
+  shortcut.textContent = day;
+  shortcut.setAttribute("aria-label", "Open day " + day);
+  shortcut.onclick = () => openDoor(day);
+  dayList.appendChild(shortcut);
+});
+
+for (let i = 0; i < 35; i++) {
+  const flake = document.createElement("span");
+  flake.className = "snow";
+  flake.textContent = "❄";
+  flake.style.left = Math.random() * 100 + "%";
+  flake.style.fontSize = (5 + Math.random() * 9) + "px";
+  flake.style.animationDuration =
+    (9 + Math.random() * 12) + "s";
+  flake.style.animationDelay =
+    (-Math.random() * 20) + "s";
+  village.appendChild(flake);
+}
+
+function updateCountdown() {
+  const now = new Date();
+  const remaining = Math.max(0,
+    Math.ceil((openDate(1) - now) / 86400000));
+
+  document.getElementById("countdown").textContent =
+    preview ? "Christmas at Bluewater • Preview Mode"
+    : remaining > 0
+    ? remaining + " days until our first door opens!"
+    : "Welcome to Christmas at Bluewater!";
+}
+updateCountdown();
+setInterval(updateCountdown, 60000);
+</script>
+</body>
+</html>
