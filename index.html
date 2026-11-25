@@ -303,6 +303,35 @@ function openDoor(day) {
       </div>
     `;
   }
+  if (unlocked && day === 2) {
+    giftText.innerHTML = `
+      <img src="day-02.png"
+        alt="Not every little joy needs to be wrapped"
+        style="width:100%; border-radius:10px;">
+
+      <div style="text-align:left; line-height:1.6;">
+
+        <p>Every so often, the best gifts of the Christmas season are the moments we didn't plan for.</p>
+
+        <p>Today's little joy is yours to keep. Save it to your phone or share it with someone who could use a little Christmas cheer.</p>
+
+      </div>
+
+      <a href="day-02.png" download="Bluewater-Christmas-Card.png"
+        style="display:inline-block; background:#15364d; color:white; padding:12px 18px; border-radius:8px; text-decoration:none; margin:10px 0;">
+        Save Your Christmas Card
+      </a>
+    `;
+  }
+
+  if (unlocked && day === 3) {
+    giftText.innerHTML = `
+      <iframe src="day-03.html"
+        title="The Bluewater Christmas Word Hunt"
+        style="width:100%; height:780px; border:0; border-radius:10px;">
+      </iframe>
+    `;
+  }
 
   document.getElementById("gift").style.maxHeight = "85dvh";
   document.getElementById("gift").style.overflowY = "auto";
