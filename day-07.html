@@ -135,6 +135,14 @@ button {
   .reveal-box {
     animation: none;
   }
+}#reveal, #next {
+  display: block;
+  width: 90%;
+  max-width: 320px;
+  margin: 20px auto 35px;
+  padding: 14px 20px;
+  background: #356d62;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -354,6 +362,12 @@ function revealMovie() {
   document.getElementById("revealBox").hidden = false;
   document.getElementById("reveal").hidden = true;
   document.getElementById("next").hidden = false;
+  requestAnimationFrame(() => {
+  document.getElementById("next").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+});
 }
 
 function nextMovie() {
