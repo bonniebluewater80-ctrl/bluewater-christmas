@@ -12,30 +12,32 @@
 .village::before {
   content: "";
   position: absolute;
-  left: 60.8%;
+  left: 60.9%;
   top: 26%;
-  width: 25%;
-  height: 12%;
+  width: 28%;
+  height: 10%;
   background: linear-gradient(
     90deg,
-    rgba(255, 224, 140, .65),
-    rgba(255, 235, 170, 0)
+    rgba(255, 245, 190, .95),
+    rgba(255, 225, 130, .45),
+    transparent
   );
   clip-path: polygon(0 50%, 100% 0, 100% 100%);
   transform-origin: left center;
-  animation: lighthouseSweep 12s ease-in-out infinite;
+  animation: lighthouseSweep 8s linear infinite;
   pointer-events: none;
   z-index: 1;
 }
 
 @keyframes lighthouseSweep {
-  0%, 100% {
-    transform: rotate(-15deg) scaleX(1);
-    opacity: .3;
+  0% {
+    transform: translateY(-50%) rotate(0deg);
   }
   50% {
-    transform: rotate(12deg) scaleX(-1);
-    opacity: .8;
+     transform: translateY(-50%) rotate(-180deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(-360deg);
   }
 }
 
