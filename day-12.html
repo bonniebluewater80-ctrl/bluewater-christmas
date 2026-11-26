@@ -257,7 +257,75 @@ h1 {
   }
 
 }
+.santa-sky {
+  position: relative;
+  height: clamp(80px, 18vw, 150px);
+  overflow: hidden;
+}
 
+#santa {
+  position: absolute;
+  width: 38%;
+  max-width: 280px;
+  height: auto;
+  left: -45%;
+  top: 35%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#santa.flying-santa {
+  animation: santaFlight 6s ease-in-out forwards;
+}
+
+@keyframes santaFlight {
+  0% {
+    left: -45%;
+    top: 35%;
+    opacity: 1;
+  }
+
+  30% {
+    left: 12%;
+    top: 15%;
+    opacity: 1;
+  }
+
+  60% {
+    left: 48%;
+    top: 5%;
+    opacity: 1;
+  }
+
+  85% {
+    left: 85%;
+    top: 0%;
+    opacity: 1;
+  }
+
+  100% {
+    left: 110%;
+    top: 0%;
+    opacity: 0;
+  }
+}
+
+.finale-card {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 20px auto 0;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #santa.flying-santa {
+    animation: none;
+    left: 31%;
+    top: 5%;
+    opacity: 1;
+  }
+}
 </style>
 </head>
 
@@ -314,7 +382,11 @@ Tap the piano keys to make a little music.
 </p>
 
 <section class="farewell" id="farewell" hidden>
-
+<div class="santa-sky">
+  <img id="santa"
+       src="day-12-santa.png"
+       alt="Santa flying with his reindeer">
+</div>
   <div class="star">✧</div>
 
   <h2>Merry Christmas!</h2>
@@ -332,7 +404,11 @@ Tap the piano keys to make a little music.
   <div class="signature">Bluewater</div>
 
   <p>12 Days. 12 Doors. 12 Little Joys.</p>
-
+<img id="finaleCard"
+     class="finale-card"
+     src="day-12-finale.png"
+     alt="Merry Christmas from Bluewater"
+     hidden>
 </section>
 
 </main>
@@ -621,7 +697,10 @@ const melody = [
 ];
 
 function stopFinale() {
+document.getElementById("santa")
+  .classList.remove("flying-santa");
 
+document.getElementById("finaleCard").hidden = true;
   runId++;
   playing = false;
 
@@ -693,7 +772,20 @@ function curtainCall() {
     bird.classList.remove("flying");
 
     farewell.hidden = false;
+const santa = document.getElementById("santa");
+const finaleCard = document.getElementById("finaleCard");
 
+finaleCard.hidden = true;
+
+santa.classList.remove("flying-santa");
+
+void santa.offsetWidth;
+
+santa.classList.add("flying-santa");
+
+schedule(() => {
+  finaleCard.hidden = false;
+}, 6000);
     playing = false;
 
     playButton.disabled = false;
