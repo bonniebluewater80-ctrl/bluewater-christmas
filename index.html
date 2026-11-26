@@ -209,9 +209,7 @@ footer {
 </dialog>
 
 <script>
-const preview = new URLSearchParams(
-  location.search
-).get("preview") === "1";
+const preview = false;
 
 const art = document.getElementById("art");
 art.onerror = function() {
