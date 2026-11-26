@@ -259,57 +259,39 @@ h1 {
 }
 .santa-sky {
   position: relative;
-  height: clamp(80px, 18vw, 150px);
+  height: clamp(120px, 24vw, 200px);
   overflow: hidden;
 }
 
 #santa {
   position: absolute;
-  width: 38%;
-  max-width: 280px;
+  width: 52%;
+  max-width: 400px;
   height: auto;
-  left: -45%;
-  top: 35%;
+  left: 0;
+  top: 0;
   opacity: 0;
   pointer-events: none;
+  will-change: transform;
 }
 
 #santa.flying-santa {
-  animation: santaFlight 6s ease-in-out forwards;
+  animation: santaFlight 9s linear forwards;
 }
 
 @keyframes santaFlight {
-  0% {
-    left: -45%;
-    top: 35%;
+  from {
+    transform: translate(-110%, 35%);
     opacity: 1;
   }
 
-  30% {
-    left: 12%;
-    top: 15%;
+  to {
+    transform: translate(
+      calc(100vw + 20px), 0%
+    );
     opacity: 1;
-  }
-
-  60% {
-    left: 48%;
-    top: 5%;
-    opacity: 1;
-  }
-
-  85% {
-    left: 85%;
-    top: 0%;
-    opacity: 1;
-  }
-
-  100% {
-    left: 110%;
-    top: 0%;
-    opacity: 0;
   }
 }
-
 .finale-card {
   display: block;
   width: 100%;
@@ -785,7 +767,7 @@ santa.classList.add("flying-santa");
 
 schedule(() => {
   finaleCard.hidden = false;
-}, 6000);
+}, 9000);
     playing = false;
 
     playButton.disabled = false;
