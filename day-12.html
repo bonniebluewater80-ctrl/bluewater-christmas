@@ -151,10 +151,10 @@ h1 {
 }
 
 #bird {
-  height: 15%;
-  width: 19%;
+  height: 11%;
+  width: 14%;
   left: 73%;
-  bottom: 66%;
+  bottom: 80%;
   z-index: 7;
   transition: left 0.5s ease,
               bottom 0.5s ease;
@@ -500,7 +500,7 @@ function moveCharacters(note, index) {
     (18 + position * 8) + "%";
 
   bird.style.bottom =
-    (62 + (index % 3) * 4) + "%";
+  (80 + (index % 3) * 2) + "%";
 
 }
 
@@ -650,7 +650,7 @@ function stopFinale() {
   piper.classList.remove("hopping");
 
   bird.style.left = "73%";
-  bird.style.bottom = "66%";
+  bird.style.bottom = "80%";
   bird.classList.remove("flying");
 
   playButton.disabled = false;
@@ -667,7 +667,7 @@ function curtainCall() {
   piper.style.left = "65%";
 
   bird.style.left = "68%";
-  bird.style.bottom = "65%";
+  bird.style.bottom = "80%";
 
   bonnie.src = poses[2];
 
