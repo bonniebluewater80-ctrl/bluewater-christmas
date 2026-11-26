@@ -1,0 +1,808 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>The Bluewater Christmas Finale</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 10px;
+  background: #faf8f2;
+  color: #18354a;
+  font-family: Georgia, serif;
+}
+
+main {
+  max-width: 950px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: clamp(21px, 4vw, 30px);
+  font-weight: normal;
+}
+
+.intro {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.star {
+  color: #b99a56;
+  font-size: 25px;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  isolation: isolate;
+  border: 2px solid #b99a56;
+  border-radius: 12px;
+  background: url("day-12-background.png")
+    center / cover no-repeat;
+}
+
+.piano {
+  position: absolute;
+  left: 5%;
+  bottom: 5%;
+  width: 90%;
+  height: 26%;
+  display: flex;
+  padding: 5px;
+  background: #493124;
+  border: 2px solid #b99a56;
+  border-radius: 7px;
+  box-shadow: 0 6px 10px #0005;
+  z-index: 2;
+}
+
+.key {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  background: linear-gradient(
+    #ffffff,
+    #f4ecda
+  );
+  border: 1px solid #8e8270;
+  border-radius: 0 0 5px 5px;
+  cursor: pointer;
+  touch-action: manipulation;
+  color: #716454;
+}
+
+.key span {
+  position: absolute;
+  bottom: 8%;
+  left: 0;
+  width: 100%;
+  font-size: clamp(9px, 2vw, 15px);
+}
+
+.key.active {
+  background: linear-gradient(
+    #fff8bc,
+    #e6bc56
+  );
+  box-shadow: inset 0 0 15px #fff;
+}
+
+.black-key {
+  position: absolute;
+  top: 5px;
+  width: 5%;
+  height: 52%;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    #494949,
+    #171717
+  );
+  border: 1px solid #111;
+  border-radius: 0 0 4px 4px;
+  z-index: 3;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.black-key.active {
+  background: #b99a56;
+}
+
+.character {
+  position: absolute;
+  pointer-events: none;
+  object-fit: contain;
+  object-position: center bottom;
+  user-select: none;
+}
+
+#bonnie {
+  height: 57%;
+  width: 29%;
+  left: 29%;
+  bottom: 20%;
+  z-index: 5;
+  transform: translateX(-50%);
+  transition: left 0.22s ease-in-out;
+}
+
+#piper {
+  height: 23%;
+  width: 19%;
+  left: 70%;
+  bottom: 19%;
+  z-index: 6;
+  transform: translateX(-50%);
+  transition: left 0.25s ease-in-out;
+}
+
+#bird {
+  height: 15%;
+  width: 19%;
+  left: 73%;
+  bottom: 66%;
+  z-index: 7;
+  transition: left 0.5s ease,
+              bottom 0.5s ease;
+}
+
+.hopping {
+  animation: hop 0.4s ease-in-out;
+}
+
+@keyframes hop {
+
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+
+  50% {
+    transform: translate(-50%, -12%);
+  }
+
+}
+
+.flying {
+  animation: flutter 0.8s ease-in-out infinite;
+}
+
+@keyframes flutter {
+
+  0%, 100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+
+  50% {
+    transform: translateY(-10%) rotate(4deg);
+  }
+
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.control {
+  padding: 13px 20px;
+  border: 1px solid #b99a56;
+  border-radius: 8px;
+  background: #18354a;
+  color: white;
+  font: 15px Georgia, serif;
+  cursor: pointer;
+}
+
+.secondary {
+  background: #faf8f2;
+  color: #18354a;
+}
+
+.control:disabled {
+  opacity: 0.5;
+}
+
+#status {
+  min-height: 25px;
+  font-size: 15px;
+  color: #527f9e;
+}
+
+.farewell {
+  padding: 24px 16px;
+  margin: 20px auto;
+  border: 1px solid #b99a56;
+  border-radius: 10px;
+  background: #fffdf7;
+  line-height: 1.8;
+}
+
+.farewell h2 {
+  font-size: 25px;
+  font-weight: normal;
+}
+
+.signature {
+  color: #397d99;
+  font-style: italic;
+  font-size: 22px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .character {
+    transition: none;
+    animation: none !important;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<main>
+
+<div class="star">✧</div>
+
+<h1>The Bluewater Christmas Finale</h1>
+
+<p class="intro">
+One last little Christmas joy.<br>
+Play a few notes or enjoy our Christmas Eve performance.
+</p>
+
+<div class="stage">
+
+  <div class="piano" id="piano"></div>
+
+  <img id="bonnie"
+       class="character"
+       src="day-12-bonnie.png"
+       alt="Bonnie">
+
+  <img id="piper"
+       class="character"
+       src="day-12-piper.png"
+       alt="Piper">
+
+  <img id="bird"
+       class="character"
+       src="day-12-bird.png"
+       alt="Bluewater bluebird">
+
+</div>
+
+<div class="controls">
+
+  <button class="control" id="play">
+    Play Our Christmas Finale
+  </button>
+
+  <button class="control secondary"
+          id="stop"
+          disabled>
+    Stop
+  </button>
+
+</div>
+
+<p id="status" aria-live="polite">
+Tap the piano keys to make a little music.
+</p>
+
+<section class="farewell" id="farewell" hidden>
+
+  <div class="star">✧</div>
+
+  <h2>Merry Christmas!</h2>
+
+  <p>
+    Thank you for spending a little of your
+    Christmas with us.
+  </p>
+
+  <p>
+    Until our next adventure, Merry Christmas
+    from Bluewater.
+  </p>
+
+  <div class="signature">Bluewater</div>
+
+  <p>12 Days. 12 Doors. 12 Little Joys.</p>
+
+</section>
+
+</main>
+
+<script>
+
+const piano = document.getElementById("piano");
+const bonnie = document.getElementById("bonnie");
+const piper = document.getElementById("piper");
+const bird = document.getElementById("bird");
+
+const playButton = document.getElementById("play");
+const stopButton = document.getElementById("stop");
+const status = document.getElementById("status");
+const farewell = document.getElementById("farewell");
+
+const notes = [
+  "C4", "D4", "E4", "F4",
+  "G4", "A4", "B4", "C5"
+];
+
+const frequencies = {
+  C4: 261.63,
+  "C#4": 277.18,
+  D4: 293.66,
+  "D#4": 311.13,
+  E4: 329.63,
+  F4: 349.23,
+  "F#4": 369.99,
+  G4: 392.00,
+  "G#4": 415.30,
+  A4: 440.00,
+  "A#4": 466.16,
+  B4: 493.88,
+  C5: 523.25
+};
+
+const poses = [
+  "day-12-bonnie.png",
+  "day-12-step.png",
+  "day-12-wave.png",
+  "day-12-bow.png"
+];
+
+poses.forEach(filename => {
+  const image = new Image();
+  image.src = filename;
+});
+
+let audio = null;
+let playing = false;
+let runId = 0;
+let timers = [];
+const voices = new Set();
+
+async function prepareAudio() {
+
+  if (!audio || audio.state === "closed") {
+    audio = new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+  }
+
+  if (audio.state === "suspended") {
+    await audio.resume();
+  }
+
+}
+
+function schedule(fn, delay) {
+
+  const timer = setTimeout(fn, delay);
+  timers.push(timer);
+
+}
+
+function sound(note, duration = 0.4) {
+
+  if (!audio || !frequencies[note]) return;
+
+  const now = audio.currentTime;
+
+  [1, 2, 3].forEach((harmonic, i) => {
+
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.value =
+      frequencies[note] * harmonic;
+
+    const volume = [0.22, 0.055, 0.018][i];
+
+    gain.gain.setValueAtTime(0.001, now);
+
+    gain.gain.exponentialRampToValueAtTime(
+      volume, now + 0.012
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001, now + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+
+    voices.add(oscillator);
+
+    oscillator.onended = () => {
+      voices.delete(oscillator);
+      oscillator.disconnect();
+      gain.disconnect();
+    };
+
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.02);
+
+  });
+
+}
+
+function illuminate(note, duration = 220) {
+
+  const key = piano.querySelector(
+    '[data-note="' + note + '"]'
+  );
+
+  if (!key) return;
+
+  key.classList.add("active");
+
+  clearTimeout(key.lightTimer);
+
+  key.lightTimer = setTimeout(() => {
+    key.classList.remove("active");
+  }, duration);
+
+}
+
+function moveCharacters(note, index) {
+
+  const position = notes.indexOf(note);
+
+  if (position < 0) return;
+
+  bonnie.style.left =
+    (11 + position * 11.2) + "%";
+
+  bonnie.src = index % 2 === 0
+    ? poses[1]
+    : poses[0];
+
+  piper.style.left =
+    Math.min(88, 22 + position * 9) + "%";
+
+  piper.classList.remove("hopping");
+
+  void piper.offsetWidth;
+
+  piper.classList.add("hopping");
+
+  bird.style.left =
+    (18 + position * 8) + "%";
+
+  bird.style.bottom =
+    (62 + (index % 3) * 4) + "%";
+
+}
+
+async function manualNote(note) {
+
+  if (playing) return;
+
+  try {
+
+    await prepareAudio();
+
+    if (playing) return;
+
+    sound(note);
+    illuminate(note);
+
+    moveCharacters(
+      note.replace("#", ""),
+      0
+    );
+
+    schedule(() => {
+      if (!playing) bonnie.src = poses[0];
+    }, 350);
+
+  } catch (error) {
+
+    status.textContent =
+      "Sound is unavailable in this browser.";
+
+  }
+
+}
+
+notes.forEach(note => {
+
+  const key = document.createElement("button");
+
+  key.className = "key";
+  key.dataset.note = note;
+  key.setAttribute("aria-label", "Play " + note);
+
+  const label = document.createElement("span");
+
+  label.textContent = note.slice(0, -1);
+
+  key.appendChild(label);
+
+  key.addEventListener("click", () => {
+    manualNote(note);
+  });
+
+  piano.appendChild(key);
+
+});
+
+const blackNotes = [
+  ["C#4", 1],
+  ["D#4", 2],
+  ["F#4", 4],
+  ["G#4", 5],
+  ["A#4", 6]
+];
+
+blackNotes.forEach(([note, position]) => {
+
+  const key = document.createElement("button");
+
+  key.className = "black-key";
+  key.dataset.note = note;
+  key.style.left = (position * 12.5) + "%";
+
+  key.setAttribute("aria-label", "Play " + note);
+
+  key.addEventListener("click", () => {
+    manualNote(note);
+  });
+
+  piano.appendChild(key);
+
+});
+
+// Jingle Bells, public-domain melody.
+// Each entry contains a note and beat length.
+
+const melody = [
+
+  ["E4",1], ["E4",1], ["E4",2],
+  ["E4",1], ["E4",1], ["E4",2],
+
+  ["E4",1], ["G4",1], ["C4",1.5],
+  ["D4",0.5], ["E4",4],
+
+  ["F4",1], ["F4",1], ["F4",1.5],
+  ["F4",0.5], ["F4",1],
+
+  ["E4",1], ["E4",1], ["E4",0.5],
+  ["E4",0.5],
+
+  ["E4",1], ["D4",1], ["D4",1],
+  ["E4",1], ["D4",2], ["G4",2],
+
+  ["E4",1], ["E4",1], ["E4",2],
+  ["E4",1], ["E4",1], ["E4",2],
+
+  ["E4",1], ["G4",1], ["C4",1.5],
+  ["D4",0.5], ["E4",4],
+
+  ["F4",1], ["F4",1], ["F4",1.5],
+  ["F4",0.5], ["F4",1],
+
+  ["E4",1], ["E4",1], ["E4",0.5],
+  ["E4",0.5],
+
+  ["G4",1], ["G4",1], ["F4",1],
+  ["D4",1], ["C4",4]
+
+];
+
+function stopFinale() {
+
+  runId++;
+  playing = false;
+
+  timers.forEach(clearTimeout);
+  timers = [];
+
+  voices.forEach(voice => {
+    try {
+      voice.stop();
+    } catch (error) {}
+  });
+
+  voices.clear();
+
+  piano.querySelectorAll("button").forEach(key => {
+
+    clearTimeout(key.lightTimer);
+    key.classList.remove("active");
+
+  });
+
+  bonnie.src = poses[0];
+  bonnie.style.left = "29%";
+
+  piper.style.left = "70%";
+  piper.classList.remove("hopping");
+
+  bird.style.left = "73%";
+  bird.style.bottom = "66%";
+  bird.classList.remove("flying");
+
+  playButton.disabled = false;
+  stopButton.disabled = true;
+
+  status.textContent =
+    "Tap the piano keys to make a little music.";
+
+}
+
+function curtainCall() {
+
+  bonnie.style.left = "45%";
+  piper.style.left = "65%";
+
+  bird.style.left = "68%";
+  bird.style.bottom = "65%";
+
+  bonnie.src = poses[2];
+
+  status.textContent =
+    "Merry Christmas from all of us!";
+
+  schedule(() => {
+
+    bonnie.src = poses[3];
+
+    piper.classList.remove("hopping");
+
+    void piper.offsetWidth;
+
+    piper.classList.add("hopping");
+
+  }, 1800);
+
+  schedule(() => {
+
+    bonnie.src = poses[2];
+
+    bird.classList.remove("flying");
+
+    farewell.hidden = false;
+
+    playing = false;
+
+    playButton.disabled = false;
+    stopButton.disabled = true;
+
+    playButton.textContent =
+      "Play the Finale Again";
+
+    farewell.scrollIntoView({
+      behavior: window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches ? "auto" : "smooth",
+      block: "nearest"
+    });
+
+  }, 3600);
+
+}
+
+async function playFinale() {
+
+  stopFinale();
+
+  const currentRun = runId;
+
+  farewell.hidden = true;
+
+  playing = true;
+
+  playButton.disabled = true;
+  stopButton.disabled = false;
+
+  try {
+
+    await prepareAudio();
+
+  } catch (error) {
+
+    if (currentRun !== runId) return;
+
+    stopFinale();
+
+    status.textContent =
+      "Sound is unavailable in this browser.";
+
+    return;
+
+  }
+
+  if (currentRun !== runId) return;
+
+  bird.classList.add("flying");
+
+  status.textContent = "Jingle Bells!";
+
+  const beat = 330;
+
+  let elapsed = 400;
+
+  melody.forEach(([note, length], index) => {
+
+    schedule(() => {
+
+      if (!playing) return;
+
+      sound(note, length * beat / 1000);
+
+      illuminate(
+        note,
+        length * beat * 0.85
+      );
+
+      moveCharacters(note, index);
+
+    }, elapsed);
+
+    elapsed += length * beat;
+
+  });
+
+  schedule(curtainCall, elapsed + 300);
+
+}
+
+playButton.addEventListener("click", playFinale);
+
+stopButton.addEventListener("click", stopFinale);
+
+window.addEventListener("message", event => {
+
+  if (
+    event.origin === window.location.origin &&
+    event.source === window.parent &&
+    event.data === "stopBluewaterFinale"
+  ) {
+    stopFinale();
+  }
+
+});
+
+window.addEventListener("pagehide", stopFinale);
+
+document.addEventListener("visibilitychange", () => {
+
+  if (document.hidden) stopFinale();
+
+});
+
+</script>
+
+</body>
+</html>
